@@ -1,8 +1,5 @@
 Short description:
 
-Behaviour Analytics is a Moodle block plugin that is intended for extracting
-sequential behaviour patterns of students from course access logs.
-
 Ask4Summary is a Moodle block plugin intended to serve as a question and answer
 service for courses. It scans resources and activities and responds to forum
 questions.
