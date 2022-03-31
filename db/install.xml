@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/ask4summary/db" VERSION="20220323" COMMENT="XMLDB file for Moodle blocks/ask4summary."
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="block_ask4summary_settings" COMMENT="Contains the teacher/admin settings for each course that have the plugin installed.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The courseid where Ask4Summary is installed."/>
+        <FIELD NAME="forumid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The forumid for which Ask4Summary will scan. Will not be set if set to scan all forums within the course."/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Turns on the Ask4Summary functionality. 0 if off, 1 if on."/>
+        <FIELD NAME="depth" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="How deep the Ask4Summary Scan Documents automatic task should crawl into webpages from a URL."/>
+        <FIELD NAME="helpername" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The Ask4Summary response name."/>
+        <FIELD NAME="responsetype" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="The method for forum scanning. 1 if set to scan all forums, 2 if set to scan a specific forum, and 3 if set to scan an automatically generated forum."/>
+        <FIELD NAME="autoforumid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The autoforum id, given it has been created. If not, it is NULL."/>
+        <FIELD NAME="enableurl" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether the course has enabled URL parsing."/>
+        <FIELD NAME="enablepdf" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether PDF parsing was enabled."/>
+        <FIELD NAME="enabledocx" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether DOCX parsing was enabled."/>
+        <FIELD NAME="enablepptx" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether PPTX parsing was enabled."/>
+        <FIELD NAME="enablepage" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="topdocs" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="3" SEQUENCE="false" COMMENT="How many documents the summary generation should consider."/>
+        <FIELD NAME="topsentences" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="8" SEQUENCE="false" COMMENT="How many sentences from the top documents should be returned to the query."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_tablepos" COMMENT="The table which stores the parts of speech for Ask4Summary.">
+      <FIELDS>
+        <FIELD NAME="posid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="ngram_length" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="The 'N' length of the POS. Ranges from 1-4."/>
+        <FIELD NAME="ngram_pos" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false" COMMENT="The part of speech of the respective N-Gram."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="posid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_tablengram" COMMENT="Table for storing n-grams from questions.">
+      <FIELDS>
+        <FIELD NAME="ngramid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="word" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The specific word."/>
+        <FIELD NAME="posid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="References the specific N-gram's POS and N."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="ngramid"/>
+        <KEY NAME="pos_ref" TYPE="foreign" FIELDS="posid" REFTABLE="block_ask4summary_tablepos" REFFIELDS="posid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_sentence" COMMENT="Contains the sentences of a certain post.">
+      <FIELDS>
+        <FIELD NAME="sentenceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course id of the given sentence."/>
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The forum post id of the sentence."/>
+        <FIELD NAME="sentence" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The cleaned sentence of the user question."/>
+        <FIELD NAME="timetaken" TYPE="number" LENGTH="12" NOTNULL="true" SEQUENCE="false" DECIMALS="9" COMMENT="The time taken for the N-Gram generation of the sentence."/>
+        <FIELD NAME="answered" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Whether the post has had an applicable summary generated. Response posts will be set to NULL."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="sentenceid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_sngram" COMMENT="The table which stores every sentences n-grams.">
+      <FIELDS>
+        <FIELD NAME="sngramid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Exists solely for insert_record method to not fail."/>
+        <FIELD NAME="sentenceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="ngramid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="ngram_ref" TYPE="foreign" FIELDS="ngramid" REFTABLE="block_ask4summary_tablengram" REFFIELDS="ngramid"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="sngramid"/>
+        <KEY NAME="sent_ref" TYPE="foreign" FIELDS="sentenceid" REFTABLE="block_ask4summary_sentence" REFFIELDS="sentenceid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_clobjects" COMMENT="The table where learning objects (be they course modules or parsed URLs) are stored.">
+      <FIELDS>
+        <FIELD NAME="obid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The ID of the course."/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The course module ID of the learning object, if it exists."/>
+        <FIELD NAME="url" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The URL of the webpage."/>
+        <FIELD NAME="depth" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="The parsed URL depth."/>
+        <FIELD NAME="mimetype" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="The mimetype of the specified course module."/>
+        <FIELD NAME="parsed" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="obid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_clsentence" COMMENT="Sentence table for course modules.">
+      <FIELDS>
+        <FIELD NAME="clsentenceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="obid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The learning object ID."/>
+        <FIELD NAME="sentence" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timetaken" TYPE="number" LENGTH="12" NOTNULL="false" SEQUENCE="false" DECIMALS="9"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="clsentenceid"/>
+        <KEY NAME="clobj_ref" TYPE="foreign" FIELDS="obid" REFTABLE="block_ask4summary_clobjects" REFFIELDS="obid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_clngram" COMMENT="The table which stores the N-Grams for every course module sentence.">
+      <FIELDS>
+        <FIELD NAME="clngramid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="clsentenceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="ngramid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="ngram_ref" TYPE="foreign" FIELDS="ngramid" REFTABLE="block_ask4summary_tablengram" REFFIELDS="ngramid"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="clngramid"/>
+        <KEY NAME="clsent_ref" TYPE="foreign" FIELDS="clsentenceid" REFTABLE="block_ask4summary_clsentence" REFFIELDS="clsentenceid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_ask4summary_response" COMMENT="The table where a query's answer is stored.">
+      <FIELDS>
+        <FIELD NAME="responseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="The ID of the answer."/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course ID of the forum post."/>
+        <FIELD NAME="postid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The forum post ID."/>
+        <FIELD NAME="replypostid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The post ID of the summary. To ensure that Ask4Summary doesn't respond to itself."/>
+        <FIELD NAME="question" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The question itself, with punctuation and capitalization removed."/>
+        <FIELD NAME="summary" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The generated summary."/>
+        <FIELD NAME="ngramlist" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Contains a linking of every N-Gram ID for comparison to see if a question was already answered."/>
+        <FIELD NAME="timetaken" TYPE="number" LENGTH="12" NOTNULL="false" SEQUENCE="false" DECIMALS="9" COMMENT="The time taken for the summary to be produced."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="responseid"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
