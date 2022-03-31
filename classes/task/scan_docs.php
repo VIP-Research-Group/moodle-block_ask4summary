@@ -84,7 +84,7 @@ class scan_docs extends \core\task\scheduled_task {
                         $this->insert_page($cm);
 
                     } else {
-                        mtrace('Cannot parse (disabled or failed); module number: ' . $cm->id);
+                        mtrace(get_string('cannotparse', 'block_ask4summary', $cm->id));
                         $DB->delete_records('block_ask4summary_clobjects', ['obid' => $initid]);
                         continue 2;
                     }
@@ -118,7 +118,7 @@ class scan_docs extends \core\task\scheduled_task {
 
                     // If document parsing is disabled, turn it to unparsed.
                     if (($doc) === false) {
-                        mtrace('Cannot parse (disabled or failed); module number: ' . $cm->id);
+                        mtrace(get_string('cannotparse', 'block_ask4summary', $cm->id));
                         $DB->set_field('block_ask4summary_clobjects', 'parsed', 0,
                                        ['cmid' => $cm->id]);
                         continue 2;
@@ -150,20 +150,20 @@ class scan_docs extends \core\task\scheduled_task {
                     } else {
                         // Otherwise remove from objects table.
 
-                        mtrace('Cannot parse (disabled or failed); module number: ' . $cm->id);
+                        mtrace(get_string('cannotparse', 'block_ask4summary', $cm->id));
                         $DB->delete_records('block_ask4summary_clobjects', ['obid' => $initid]);
                         continue 2;
                     }
 
                 default:
-                    mtrace('SQL query failed... unknown module type collected.');
+                    mtrace(get_string('unknowncm', 'block_ask4summary'));
             }
 
             break;
 
         }
 
-        mtrace("Finished");
+        mtrace(get_string('finished', 'block_ask4summary'));
 
         return true;
     }
@@ -234,8 +234,8 @@ class scan_docs extends \core\task\scheduled_task {
         $cmid = $cm->id;
         $cmcourseid = $cm->course;
 
-        mtrace("Course module ID: " . $cmid);
-        mtrace("Course ID: " . $cmcourseid);
+        mtrace(get_string('coursemoduleid', 'block_ask4summary', $cmid));
+        mtrace(get_string('courseid', 'block_ask4summary', $cmcourseid));
 
         if ($sentences = $this->do_page($cm)) {
 
@@ -363,8 +363,7 @@ class scan_docs extends \core\task\scheduled_task {
 
             $text = shell_exec('abiword --to=txt --to-name=fd://1 "' . $fn . '"');
             if (strlen($text) == 0) {
-                mtrace('No parsable text.');
-                return array();
+                return false;
             }
             return block_ask4summary_break_content(strip_tags($text));
 
@@ -373,8 +372,6 @@ class scan_docs extends \core\task\scheduled_task {
             // open the zip archive and get the XML file content.
             $zip = new \ZipArchive();
             if ($zip->open($fn) === true) {
-                mtrace('opened');
-
                 // Another failsafe.
                 $DB->set_field('block_ask4summary_clobjects',
                                'mimetype', $mimetype, ['obid' => $cm->obid]);
@@ -384,7 +381,6 @@ class scan_docs extends \core\task\scheduled_task {
                 return block_ask4summary_break_content(strip_tags($contents));
 
             } else {
-                mtrace('failed');
                 return false;
             }
 
@@ -393,8 +389,6 @@ class scan_docs extends \core\task\scheduled_task {
             // open the zip file.
             $zip = new \ZipArchive();
             if ($zip->open($fn) === true) {
-                mtrace('opened');
-
                 // Another failsafe.
                 $DB->set_field('block_ask4summary_clobjects',
                                'mimetype', $mimetype, ['obid' => $cm->obid]);
@@ -441,7 +435,6 @@ class scan_docs extends \core\task\scheduled_task {
 
             } else {
                 // Otherwise could not open.
-                mtrace('failed');
                 return false;
             }
 
@@ -462,8 +455,8 @@ class scan_docs extends \core\task\scheduled_task {
         $cmid = $cm->id;
         $cmcourseid = $cm->course;
 
-        mtrace("Course module ID: " . $cmid);
-        mtrace("Course ID: " . $cmcourseid);
+        mtrace(get_string('coursemoduleid', 'block_ask4summary', $cmid));
+        mtrace(get_string('courseid', 'block_ask4summary', $cmcourseid));
 
         if ($sentences = $this->do_file($cm)) {
 
@@ -594,7 +587,12 @@ class scan_docs extends \core\task\scheduled_task {
                     if (isset($parts['port'])) {
                         $href .= ':' . $parts['port'];
                     }
-                    $href .= dirname($parts['path'], 1).$path;
+                    if (isset($parts['path'])) {
+                        $href .= dirname($parts['path'], 1).$path;
+                    } else {
+                        $href .= $path;
+                    }
+                    
                 }
             }
             $this->crawl_page($href, $depth - 1, $paragraphs);
@@ -603,7 +601,7 @@ class scan_docs extends \core\task\scheduled_task {
     }
 
     /**
-     * Function to insert the URL into the applicable tables
+     * Function to insert the URL into the applicable tables.
      *
      *
      * @param object $cm - The course module
@@ -616,9 +614,9 @@ class scan_docs extends \core\task\scheduled_task {
         $cmcourseid = $cm->course;
         $depth = $cm->depth;
 
-        mtrace("Course module ID: " . $cmid);
-        mtrace("Course ID: " . $cmcourseid);
-        mtrace("URL: " . $cmurl);
+        mtrace(get_string('coursemoduleid', 'block_ask4summary', $cmid));
+        mtrace(get_string('courseid', 'block_ask4summary', $cmcourseid));
+        mtrace(get_string('urlname', 'block_ask4summary', $cmurl));
 
         // Flag for whether this URL was the original (hence a course module).
         $cmflag = true;
@@ -838,7 +836,7 @@ class scan_docs extends \core\task\scheduled_task {
 
         $msgngram = block_ask4summary_generate_ngram_pos($cleanedsentence);
 
-        mtrace("N-Grams Calculated");
+        mtrace(get_string('ngramscalc', 'block_ask4summary'));
 
         // If N-Grams exist.
         if ($msgngram !== false) {
@@ -848,7 +846,7 @@ class scan_docs extends \core\task\scheduled_task {
             }
 
         } else {
-            mtrace("No valid N-Grams");
+            mtrace(get_string('novalid', 'block_ask4summary'));
         }
 
         return $sentarr;

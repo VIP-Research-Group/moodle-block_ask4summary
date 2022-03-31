@@ -99,7 +99,7 @@ class answer_questions extends \core\task\adhoc_task {
                 // If there were no sentences able to be generated...
                 if (empty($summary)) {
 
-                    mtrace('Could not answer the question.');
+                    mtrace(get_string('notanswerable', 'block_ask4summary'));
 
                     $summary = get_string('unable', 'block_ask4summary');
 
@@ -126,7 +126,7 @@ class answer_questions extends \core\task\adhoc_task {
                 // Otherwise there were no available course objects.
                 // Reply to the post and insert that into the sentence table.
 
-                mtrace('No available course objects!');
+                mtrace(get_string('noclobjs', 'block_ask4summary'));
 
                 $summary = get_string('unable', 'block_ask4summary');
 
@@ -147,8 +147,7 @@ class answer_questions extends \core\task\adhoc_task {
 
             }
 
-            mtrace('');
-
+            mtrace($postid);
             mtrace($summary);
 
             $DB->set_field('block_ask4summary_sentence', 'answered', 1,

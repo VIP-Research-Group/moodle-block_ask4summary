@@ -64,7 +64,7 @@ echo html_writer::empty_tag('br');
 echo html_writer::div('<hr/>', '');
 
 $moodleurl = new moodle_url('https://www.youtube.com/watch?v=-1hA-rPQK68');
-$title = 'Student Guide';
+$title = get_string('studentvid', 'block_ask4summary');
 $mediamanager = core_media_manager::instance();
 $embedoptions = array(
     core_media_manager::OPTION_TRUSTED => true, // Only add if user has respective capability with RISK_XSS mask.

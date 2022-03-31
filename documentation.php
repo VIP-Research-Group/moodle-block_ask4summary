@@ -62,7 +62,7 @@ echo html_writer::div(block_ask4summary_get_nav_links(), '');
 echo html_writer::div('<hr/>', '');
 
 $moodleurl = new moodle_url('https://www.youtube.com/watch?v=7be6xexguwI');
-$title = 'Configuration';
+$title = get_string('configvid', 'block_ask4summary');
 $mediamanager = core_media_manager::instance();
 $embedoptions = array(
     core_media_manager::OPTION_TRUSTED => true, // Only add if user has respective capability with RISK_XSS mask.
@@ -78,7 +78,7 @@ if ($mediamanager->can_embed_url($moodleurl, $embedoptions)) {
 echo html_writer::div('<hr/>', '');
 
 $moodleurl = new moodle_url('https://www.youtube.com/watch?v=1LTJqx_O-k4');
-$title = 'Teacher Guide';
+$title = get_string('teachervid', 'block_ask4summary');
 $mediamanager = core_media_manager::instance();
 $embedoptions = array(
     core_media_manager::OPTION_TRUSTED => true, // Only add if user has respective capability with RISK_XSS mask.

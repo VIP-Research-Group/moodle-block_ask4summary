@@ -246,7 +246,8 @@ function block_ask4summary_generate_ngram_pos($query) {
 
     $msgend = microtime(true);
     $msgtime = $msgend - $msgstart;
-    mtrace("Took " . $msgtime . " seconds for Query: " . $query);
+    mtrace($query);
+    mtrace(get_string('timetaken', 'block_ask4summary', $msgtime));
 
     if (!is_object($ngrams)) {
         return false;

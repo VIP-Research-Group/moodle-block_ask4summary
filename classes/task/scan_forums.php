@@ -67,13 +67,11 @@ class scan_forums extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
 
-        mtrace("Automatic Forum Scanning Began");
-
         // Only select the courses that have set the functionality on.
         $enabledcourses = $DB->get_records('block_ask4summary_settings',
                                             ['enabled' => 1]);
 
-        mtrace("Retrieved Enabled Courses");
+        mtrace(get_string('retrieved', 'block_ask4summary'));
 
         // Go through each course...
         foreach ($enabledcourses as $course) {
@@ -93,12 +91,11 @@ class scan_forums extends \core\task\scheduled_task {
             $answer['topsent'] = $csent;
             $answer['courseid'] = $cid;
 
-            mtrace("Working on Course Id: " . $cid);
+            mtrace(get_string('currentcourse', 'block_ask4summary', $cid));
 
             // Get the messages that include the helper name.
             $messages = $this->get_messages($cid, $cname, $ctype, $cfid);
 
-            mtrace("Retrieved Messages from Course Id:" . $cid);
             foreach ($messages as $postid => $message) {
                 // Get the N-Grams for the specific sentence.
                 $ngrams = $this->return_ngram_pos($message, $cname);
@@ -120,15 +117,15 @@ class scan_forums extends \core\task\scheduled_task {
                     $sngramid = $this->get_sngram($sentenceid, $ngramid);
 
                 }
-
+                // Sort the N-Gram list, and turn into a string.
                 asort($ngramlist);
 
                 $ngramlist = implode('-', $ngramlist);
 
                 mtrace($ngramlist);
-
+                // If the N-Gram list was found in the summary table...
                 if (in_array($ngramlist, $answerngramlist, true)) {
-
+                    // Use the previous response and do not compute again.
                     $responseid = array_search($ngramlist, $answerngramlist);
 
                     $this->existing_answer($cid, $postid, $responseid);
@@ -146,7 +143,7 @@ class scan_forums extends \core\task\scheduled_task {
                 } else {
                     // Otherwise the parsing failed
                     // or no valid top POS ngrams were calculated.
-                    mtrace('Unable to answer question.');
+                    mtrace(get_string('notanswerable', 'block_ask4summary'));
 
                     $obj = (object)
                         ['courseid' => $cid,
@@ -164,7 +161,6 @@ class scan_forums extends \core\task\scheduled_task {
             // Now get all the messages with subjects that are 'Hi (Helpername)'.
             $subjmessages = $this->get_messages_from_subject($cid, $cname, $ctype, $cfid);
 
-            mtrace("Retrieved Subject Messages from Course Id:" . $cid);
             foreach ($subjmessages as $postid => $message) {
                 // Get the N-Grams for each sentence of the message.
                 $subjngrams = $this->return_ngram_pos($message, $cname);
@@ -185,15 +181,15 @@ class scan_forums extends \core\task\scheduled_task {
 
                     $sngramid = $this->get_sngram($sentenceid, $ngramid);
                 }
-
+                // Sort N-Gram list and turn into a string.
                 asort($ngramlist);
 
                 $ngramlist = implode('-', $ngramlist);
 
                 mtrace($ngramlist);
-
+                // If the N-Gram list was found in the response table...
                 if (in_array($ngramlist, $answerngramlist, true)) {
-
+                    // Do not compute again and use the previous summary.
                     $responseid = array_search($ngramlist, $answerngramlist);
 
                     $this->existing_answer($cid, $postid, $responseid);
@@ -239,7 +235,7 @@ class scan_forums extends \core\task\scheduled_task {
             // If any posts were parsed, queue the answering service.
             if ($answer['posts']) {
 
-                mtrace('Adhoc queued!');
+                mtrace(get_string('adhocqueue', 'block_ask4summary'));
 
                 $answerservice = new answer_questions();
 
@@ -454,44 +450,36 @@ class scan_forums extends \core\task\scheduled_task {
 
         $replace = array("'", ".", ":", ";", "?", "!", '"', ',', "hi ". strtolower($cname) . " ");
 
-        mtrace("Preparing Message for N-Gram Generation");
+        mtrace(get_string('prepmsg', 'block_ask4summary'));
 
         mtrace($message);
 
         // Remove HTML tags.
         $cleanedmessage = strip_tags($message);
 
-        mtrace("Stripped Tags... <br>");
-
         mtrace($cleanedmessage);
 
         // Break the message into sentences.
         $sentences = block_ask4summary_break_content($cleanedmessage);
 
-        mtrace("Broken Into Sentences... <br>");
-
         $sentarr = array();
+
+        mtrace(get_string('prepsent', 'block_ask4summary'));
 
         // For each sentence, replace the helpername and puncutation. Then calculate
         // their respective ngrams. Return an array of N-Gram properties, given that
         // any exist for that sentence.
         foreach ($sentences as $sentence) {
 
-            mtrace("Preparing to remove punctuation and helper name (if present)");
-
             mtrace($sentence);
 
             $cleanedsentence = str_replace($replace, '', strtolower($sentence));
 
-            mtrace("Cleaned Sentence... <br>");
-
             mtrace($cleanedsentence);
-
-            mtrace("Calculating N-Grams for: " . $cleanedsentence . "<br>");
 
             $msgnram = block_ask4summary_generate_ngram_pos($cleanedsentence);
 
-            mtrace("N-Grams Calculated");
+            mtrace(get_string('ngramscalc', 'block_ask4summary'));
 
             if ($msgnram !== false) {
 
@@ -500,7 +488,7 @@ class scan_forums extends \core\task\scheduled_task {
                 }
 
             } else {
-                mtrace("No valid N-Grams");
+                mtrace(get_string('novalid', 'block_ask4summary'));
             }
         }
 
@@ -541,7 +529,7 @@ class scan_forums extends \core\task\scheduled_task {
 
         global $DB;
 
-        mtrace('Found an existing N-Gram combination in Summaries!');
+        mtrace(get_string('existinganswer', 'block_ask4summary'));
 
         $response = $DB->get_record('block_ask4summary_response',
             ['responseid' => $responseid]);
