@@ -29,20 +29,6 @@ by copying the plugin files into the blocks/ask4summary directory.
 
 Post-installation set-up:
 
-The plugin contains some global settings that affect what a user sees when they
-use the program. The settings give the option to grant or revoke the role of
-researcher to any non-student user enroled in a course the plugin is installed
-in. The researcher role allows the user to see the current graph configurations
-and clustering results of other users in that course. The researcher can only
-see another user's data, they can not change it. The settings can be accessed
-as administrator from Site administration -> Plugins overview, then searching
-for "Behaviour Analytics" and clicking the associated settings link.
-
-The block also has a scheduled task that is, by default, set to run once a day.
-The frequency that the task runs can be changed by going to
-Site administration -> Server -> Scheduled tasks, then clicking the settings
-icon for "Update Behaviour Analytics."
-
 Ask4Summary contains settings unique to each course it is added to.
 Students will be able to see certain settings set by teachers; but, the
 majority of settings will not be seen by students. The block configuration
