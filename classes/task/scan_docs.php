@@ -592,7 +592,6 @@ class scan_docs extends \core\task\scheduled_task {
                     } else {
                         $href .= $path;
                     }
-                    
                 }
             }
             $this->crawl_page($href, $depth - 1, $paragraphs);
