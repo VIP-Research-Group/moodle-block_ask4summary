@@ -1,102 +1,101 @@
 .path-blocks-ask4summary .bigger {
-	font-size: 1.8em;
+    font-size: 1.8em;
 }
 
 .path-blocks-ask4summary .secheader {
-	color: #333333;
-	font-size:  1.8em;
-	text-align:  center;
+    color: #333;
+    font-size: 1.8em;
+    text-align: center;
 }
 
 /* For logistics.php progress table headers */
 .path-blocks-ask4summary .colheader {
-	color: #333333;
-	background-color: #fafafa;
-	border: 1px solid; 
-	border-color: #808080;
-	font-size: 1.5em; 
-	padding: 10px 50px;
+    color: #333;
+    background-color: #fafafa;
+    border: 1px solid;
+    border-color: #808080;
+    font-size: 1.5em;
+    padding: 10px 50px;
 }
 
 .path-blocks-ask4summary .centertable {
-	margin-left: auto;
-	margin-right: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* For logistics.php progress table types */
 .path-blocks-ask4summary .logrows {
-	color: #333333;
-	background-color: #fafafa;
-	border: 1px solid;
-	border-color: #808080;
-	font-size: 1.5em;
-	text-align: center;
-	padding: 10px 35px;
+    color: #333;
+    background-color: #fafafa;
+    border: 1px solid;
+    border-color: #808080;
+    font-size: 1.5em;
+    text-align: center;
+    padding: 10px 35px;
 }
 
 .path-blocks-ask4summary .centerul {
-	display: table;
-	margin: 0 auto;
-	list-style-type: none;
+    display: table;
+    margin: 0 auto;
+    list-style-type: none;
 }
 
 .path-blocks-ask4summary .disabled {
-	color:  #D11D27;
-	font-size: 1.5em;
-	display: inline;
+    color: #d11d27;
+    font-size: 1.5em;
+    display: inline;
 }
 
 .path-blocks-ask4summary .enabled {
-	color:  #43A343;
-	font-size: 1.5em;
-	display: inline;
+    color: #43a343;
+    font-size: 1.5em;
+    display: inline;
 }
 
 .path-blocks-ask4summary .centerline {
-	text-align: center;
+    text-align: center;
 }
 
 /* Container for the parsed tile cards */
 .path-blocks-ask4summary .container {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* For the course modules within */
 .path-blocks-ask4summary .itemcontainer {
-	background-color: #fafafa;
-	width: 200px;
-	margin: 10px;
-	padding: 5px;
-	border: 1px solid #808080;
-	line-height: 75px;
-	font-size: 1.2em;
-	word-wrap: break-word;
+    background-color: #fafafa;
+    width: 200px;
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid #808080;
+    line-height: 75px;
+    font-size: 1.2em;
+    word-wrap: break-word;
 }
 
 .path-blocks-ask4summary .itemheader {
-	background-color:  #808080;
-	text-align: center;
-	font-size: 1.2em;
+    background-color: #808080;
+    text-align: center;
+    font-size: 1.2em;
 }
 
 .path-blocks-ask4summary .item {
-	color: #333333;
-	line-height: 1.6;
-	padding: 5px;
+    color: #333333;
+    line-height: 1.6;
+    padding: 5px;
 }
 
 .path-blocks-ask4summary .biggernormal {
-	font-size: 1.2em;
+    font-size: 1.2em;
 }
 
 .path-blocks-ask4summary .smallerhr {
-	width: 27em;
-	text-align: left;
+    width: 27em;
+    text-align: left;
 }
 
 .path-blocks-ask4summary .nobullets {
-	list-style-type: none;
+    list-style-type: none;
 }
-

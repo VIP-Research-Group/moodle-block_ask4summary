@@ -26,8 +26,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_ask4summary';
-$plugin->version = 2022032300;
+$plugin->version = 2022033100;
 // Moodle 3.3.3 for mtrace statements. This may lower later if removed.
 $plugin->requires = 2017051503;
-$plugin->release = 'v0.1.0';
+// Fixed CSS style issues.
+$plugin->release = 'v0.1.0.1';
 $plugin->maturity = MATURITY_STABLE;
