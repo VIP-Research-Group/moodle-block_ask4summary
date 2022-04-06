@@ -227,3 +227,4 @@ $string['noclobjs'] = 'No course learning objects!';
 $string['timetaken'] = 'Took {$a} seconds.';
 $string['prepmsg'] = 'Preparing Message for N-Gram generation.';
 $string['prepsent'] = 'Preparing Sentences for N-Gram generation.';
+$string['deletedforum'] = 'NOTE: The currently selected forum has been deleted. Please set a new forum in Block Configuration.';

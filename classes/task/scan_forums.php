@@ -93,6 +93,12 @@ class scan_forums extends \core\task\scheduled_task {
 
             mtrace(get_string('currentcourse', 'block_ask4summary', $cid));
 
+            // Confirm that the selected forum was not deleted.
+            if (($ctype !== 1) && (is_null($cfid))) {
+                mtrace(get_string('deletedforum', 'block_ask4summary'));
+                continue;
+            }
+
             // Get the messages that include the helper name.
             $messages = $this->get_messages($cid, $cname, $ctype, $cfid);
 

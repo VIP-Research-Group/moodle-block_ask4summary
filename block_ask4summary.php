@@ -193,12 +193,28 @@ class block_ask4summary extends block_base {
                         } else if ($responsetype == 3) {
                             // Now verify whether the autoforum name was changed.
                             $autoforumname = $this->config->autotext;
+
+                            // This is in case the autoforum was deleted.
+                            if ($autoforumid === null) {
+                                $autoobj = block_ask4summary_create_forum($COURSE->id, $autoforumname);
+                                $autoforumid = $autoobj->id;
+                            }
                             block_ask4summary_update_autoforum($COURSE->id,
                                                                $autoforumname,
                                                                $autoforumid);
                             // A failsafe, was running into problems.
                             $forumid = $autoforumid;
                         }
+                    }
+
+                    // These are checks to see if a forum
+                    // that was selected could have been deleted.
+                    if (!($DB->get_record('forum', ['id' => $forumid]))) {
+                        $forumid = null;
+                    }
+
+                    if (!($DB->get_record('forum', ['id' => $autoforumid]))) {
+                        $autoforumid = null;
                     }
 
                     $cursettings->helpername = $helpername;
@@ -273,6 +289,15 @@ class block_ask4summary extends block_base {
             }
             // This is for seeing new file course modules that have not been scanned.
             $unscanned = block_ask4summary_get_unscanned_cms($COURSE->id);
+
+            // This is to inform that the selected forum has been deleted.
+            if ($rec = $DB->get_record('block_ask4summary_settings',
+                ['courseid' => $COURSE->id])) {
+                if (($rec->responsetype !== 1) && is_null(($rec->forumid))) {
+                    $this->content->text .= get_string('deletedforum', 'block_ask4summary');
+                    $this->content->text .= html_writer::empty_tag('br');
+                }
+            }
 
             // Link to Ask4Summary logistics.
             $this->content->text .= html_writer::tag('a', get_string("loganchor", "block_ask4summary"),
