@@ -29,7 +29,7 @@ $tasks = [
     [
         'classname' => 'block_ask4summary\task\scan_forums',
         'blocking' => 0,
-        'minute' => '15',
+        'minute' => '*/15',
         'hour' => '*',
         'day' => '*',
         'month' => '*',
