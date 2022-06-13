@@ -26,9 +26,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_ask4summary';
-$plugin->version = 2022041400;
+$plugin->version = 2022061300;
 // Moodle 3.3.3 for mtrace statements. This may lower later if removed.
 $plugin->requires = 2017051503;
-// Fixed cron settings for Forum Scanning.
-$plugin->release = 'v0.1.2';
+// Added Privacy API requirements.
+$plugin->release = 'v0.1.3';
 $plugin->maturity = MATURITY_STABLE;

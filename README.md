@@ -23,7 +23,7 @@ TERMS OF USE:
 
 The VIP Research Group is a research group led by Prof. Maiga Chang (https://www.athabascau.ca/science-and-technology/our-people/maiga-chang.html) at the School of Computing and Information Systems, Athabasca University. This plugin, Ask4Summary, is one of the research group's works. The research group does have a follow-up research plan to improve it and further use it in other research projects.
 
-Almost all of Prof. Chang's works are open access (or open source). This plugin is now open access and there is no plan to make it open source. The N-Gram POS service used by the plugin is open access and running on a self-sponsored server, as all of other research projects (see http://maiga.athabascau.ca/#advanced) they will be always online, improving, and accessible as long as the cost can be affordable and covered by Prof. Chang.
+Almost all of Prof. Chang's works are open access (or open source). The N-Gram POS service used by the plugin is open access and running on a self-sponsored server, as all of other research projects (see http://maiga.athabascau.ca/#advanced) they will be always online, improving, and accessible as long as the cost can be affordable and covered by Prof. Chang.
 
 Of course if in any case just like the access volume of the web service becoming high or any business/commercial takes advantage of using it to make money, then the term of using the web service may look for changes; for examples, donations, personal/academic/business license and subscription modes, etc. However, it is really too early to say that.
 
